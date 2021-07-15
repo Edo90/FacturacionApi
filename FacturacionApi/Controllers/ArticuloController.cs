@@ -15,11 +15,6 @@ namespace FacturacionApi.Controllers
     public class ArticuloController : ControllerBase
     {
 
-        public ArticuloController()
-        {
-
-        }
-
         [HttpGet("GetById")]
         public ActionResult<ArticuloViewModel> GetById(int id)
         {
