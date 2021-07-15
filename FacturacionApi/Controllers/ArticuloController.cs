@@ -22,6 +22,9 @@ namespace FacturacionApi.Controllers
             {
                 using var _dbContext = new FacturacionDbContext();
                 var articulo = _dbContext.Articulos.FirstOrDefault(x => x.Id == id);
+
+                if (articulo == null) return NotFound();
+
                 ArticuloViewModel viewModel = new()
                 {
                     Id = articulo.Id,

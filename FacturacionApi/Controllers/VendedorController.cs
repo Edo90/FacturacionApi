@@ -20,6 +20,8 @@ namespace FacturacionApi.Controllers
             {
                 using var _dbContext = new FacturacionDbContext();
                 var vendedor = _dbContext.Vendedores.FirstOrDefault(x => x.Id == id);
+                if (vendedor == null) return NotFound();
+
                 VendedorViewModel viewModel = new()
                 {
                     Id = vendedor.Id,
@@ -86,7 +88,7 @@ namespace FacturacionApi.Controllers
         }
 
         [HttpPut]
-        public ActionResult UpdateArticulo(VendedorViewModel viewModel)
+        public ActionResult UpdateVendedor(VendedorViewModel viewModel)
         {
             using var _dbContext = new FacturacionDbContext();
 
@@ -108,6 +110,7 @@ namespace FacturacionApi.Controllers
             using var _dbContext = new FacturacionDbContext();
 
             var vendendor = _dbContext.Vendedores.FirstOrDefault(x => x.Id == id);
+            if (vendendor == null) return NotFound();
 
             vendendor.Estado = false;
             _dbContext.SaveChanges();
