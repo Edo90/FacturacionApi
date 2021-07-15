@@ -27,7 +27,7 @@ namespace FacturacionApi.Controllers
             {
                 using var _dbContext = new FacturacionDbContext();
                 var articulo = _dbContext.Articulos.FirstOrDefault(x => x.Id == id);
-                ArticuloViewModel viewModel = new ArticuloViewModel()
+                ArticuloViewModel viewModel = new()
                 {
                     Id = articulo.Id,
                     Descripcion = articulo.Descripcion,
@@ -48,7 +48,7 @@ namespace FacturacionApi.Controllers
         {
             using var _dbContext = new FacturacionDbContext();
 
-            var articulos = _dbContext.Articulos.ToList();
+            var articulos = _dbContext.Articulos.Where(x => x.Estado).ToList();
             List<ArticuloViewModel> result = new();
             foreach (var item in articulos)
             {
@@ -105,6 +105,18 @@ namespace FacturacionApi.Controllers
             existing.PrecioUnitario = viewModel.PrecioUnitario;
             existing.Estado = viewModel.Estado;
             existing.Descripcion = viewModel.Descripcion;
+            _dbContext.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete]
+        public ActionResult Delete(int id)
+        {
+            using var _dbContext = new FacturacionDbContext();
+
+            var articulo = _dbContext.Articulos.FirstOrDefault(x => x.Id == id);
+
+            articulo.Estado = false;
             _dbContext.SaveChanges();
             return Ok();
         }
