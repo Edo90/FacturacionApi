@@ -4,14 +4,16 @@ using FacturacionApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FacturacionApi.Migrations
 {
     [DbContext(typeof(FacturacionDbContext))]
-    partial class FacturacionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210816204100_AsientoContable")]
+    partial class AsientoContable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,41 +40,6 @@ namespace FacturacionApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Articulos");
-                });
-
-            modelBuilder.Entity("FacturacionApi.Models.Entities.AsientoContable", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Cuenta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("FechaAsiento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("MontoAsiento")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TipoDeMovimiento")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("AsientosContables");
                 });
 
             modelBuilder.Entity("FacturacionApi.Models.Entities.Cliente", b =>
@@ -157,17 +124,6 @@ namespace FacturacionApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vendedores");
-                });
-
-            modelBuilder.Entity("FacturacionApi.Models.Entities.AsientoContable", b =>
-                {
-                    b.HasOne("FacturacionApi.Models.Entities.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("FacturacionApi.Models.Entities.Facturacion", b =>

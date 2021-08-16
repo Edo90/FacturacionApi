@@ -7,38 +7,34 @@ using System.Threading.Tasks;
 namespace FacturacionApi.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+{
+    private readonly DbContext _dbContext;
+    private readonly DbSet<TEntity> _dbSet;
+    public Repository(DbContext dbContext)
     {
-        private readonly DbContext _dbContext;
-        private readonly DbSet<TEntity> _dbSet;
-        public Repository(DbContext dbContext)
-        {
-            _dbContext = dbContext;
-            _dbSet = _dbContext.Set<TEntity>();
-        }
-
-        public void Delete(TEntity entity)
-        {
-            throw new NotImplementedException();
-        }
+        _dbContext = dbContext;
+        _dbSet = _dbContext.Set<TEntity>();
+    }
 
         public TEntity Find(params object[] keyValues)
         {
-            throw new NotImplementedException();
+            return _dbSet.Find(keyValues);
         }
-
         public IEnumerable<TEntity> FindAll()
         {
-            throw new NotImplementedException();
+            return _dbContext.Set<TEntity>();
         }
-
         public void Insert(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Add(entity);
         }
-
         public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Modified;
+        }
+        public void Delete(TEntity entity)
+        {
+            _dbSet.Remove(entity);
         }
     }
 }

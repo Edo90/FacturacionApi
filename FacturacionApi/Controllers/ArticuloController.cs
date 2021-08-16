@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FacturacionApi.Models;
+using FacturacionApi.Models.Entities;
+using FacturacionApi.Repositories;
 using FacturacionApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +16,23 @@ namespace FacturacionApi.Controllers
     [ApiController]
     public class ArticuloController : ControllerBase
     {
+        private readonly IRepository<Articulo> _repo;
+        public ArticuloController(IRepository<Articulo> repo)
+        {
+            _repo = repo;
+        }
 
         [HttpGet("GetById")]
         public ActionResult<ArticuloViewModel> GetById(int id)
         {
             try
             {
+
                 using var _dbContext = new FacturacionDbContext();
+                //var _repo = new ArticuloRepository(_dbContext);
+                //var test = _repo.Find(id);
+                //var test2 = _repo.SumTwoDBNumbers();
+
                 var articulo = _dbContext.Articulos.FirstOrDefault(x => x.Id == id);
 
                 if (articulo == null) return NotFound();
