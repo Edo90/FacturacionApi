@@ -5,12 +5,11 @@ namespace FacturacionApi.Repositories
 {
     public interface IUnitOfWork
     {
-        DbContext DbContext { get; }
-
+        public DbContext Context { get; }
         void BeginTransaction();
         void SaveChanges();
         bool Commit();
         void Rollback();
-        FacturacionDbContext GetDbContext();
+        IRepository<TEntity> Repository<TEntity>();
     }
 }

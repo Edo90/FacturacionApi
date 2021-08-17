@@ -85,6 +85,7 @@ namespace FacturacionApi.Controllers
         {
             try
             {
+                
                 _facturacionRepo.Insert(new()
                 {
                     ArticuloId = model.ArticuloId,
@@ -139,7 +140,7 @@ namespace FacturacionApi.Controllers
             {
                 var factura = _facturacionRepo.Find(id);
                 _facturacionRepo.Delete(factura);
-
+                _facturacionRepo.SaveChanges();
                 return Ok("Ha sido eliminado");
             }
             catch (Exception)

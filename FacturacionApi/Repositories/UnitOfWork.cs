@@ -9,16 +9,15 @@ namespace FacturacionApi.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public DbContext _context;
+        private Dictionary<string, dynamic> _repositories;
 
-        private readonly FacturacionDbContext _context;
-
-
-        public UnitOfWork(FacturacionDbContext dbContext)
+        public UnitOfWork(DbContext context)
         {
-            _context = dbContext;
+            _context = context;
         }
 
-        public DbContext DbContext => _context;
+        public DbContext Context => _context;
 
         public void BeginTransaction()
         {
@@ -31,17 +30,28 @@ namespace FacturacionApi.Repositories
             {
                 _context.Database.CommitTransaction();
                 return true;
-            }
-            catch (Exception)
+            }catch(Exception)
             {
                 return false;
             }
             
+
         }
 
-        public FacturacionDbContext GetDbContext()
+        public IRepository<TEntity> Repository<TEntity>()
         {
-            throw new NotImplementedException();
+            if (_repositories == null)
+                _repositories = new Dictionary<string, dynamic>();
+
+            var type = typeof(TEntity).Name;
+
+            if (_repositories.ContainsKey(type))
+                return (IRepository<TEntity>)_repositories[type];
+
+            var repositoryType = typeof(Repository<>);
+            _repositories.Add(type, Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), this));
+
+            return _repositories[type];
         }
 
         public void Rollback()

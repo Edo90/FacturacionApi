@@ -14,10 +14,7 @@ namespace FacturacionApi.Repositories
         void Delete(TEntity entity);
         IQueryable<TEntity> Queryable();
         void SaveChanges();
-        /// <summary>
-        /// PEnding to fix
-        /// </summary>
-        void SaveUnitOfWork();
+        IRepository<TEntity> GetRepository();
         
     }
 }

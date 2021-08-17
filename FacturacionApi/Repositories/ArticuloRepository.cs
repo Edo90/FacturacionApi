@@ -9,8 +9,8 @@ namespace FacturacionApi.Repositories
 {
     public class ArticuloRepository : Repository<Articulo>
     {
-        public ArticuloRepository(DbContext dbContext) : base(dbContext)
-        {
+       public ArticuloRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
+       {
         }
     }
 }

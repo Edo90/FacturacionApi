@@ -30,6 +30,7 @@ namespace FacturacionApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<DbContext,FacturacionDbContext>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRepository<Articulo>,Repository<Articulo>>();
             services.AddScoped<IRepository<Facturacion>,Repository<Facturacion>>();
             

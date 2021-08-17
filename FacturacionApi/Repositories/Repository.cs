@@ -10,11 +10,11 @@ namespace FacturacionApi.Repositories
     {
         private readonly DbContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
-        //private readonly IUnitOfWork _unitOfWork;
-        public Repository(DbContext dbContext)
+        private readonly IUnitOfWork _unitOfWork;
+        public Repository(IUnitOfWork unitOfWork)
         {
-            //_unitOfWork = unitOfWork;
-            _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
+            _dbContext = _unitOfWork.Context;
             _dbSet = _dbContext.Set<TEntity>();
         }
 
@@ -28,15 +28,43 @@ namespace FacturacionApi.Repositories
         }
         public void Insert(TEntity entity)
         {
+
             _dbSet.Add(entity);
+            _unitOfWork.SaveChanges();
+
         }
         public void Update(TEntity entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
+            _unitOfWork.BeginTransaction();
+            try
+            {
+                _dbContext.Entry(entity).State = EntityState.Modified;
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+                throw;
+            }
+
+            _unitOfWork.Commit();
+
         }
         public void Delete(TEntity entity)
         {
-            _dbSet.Remove(entity);
+            _unitOfWork.BeginTransaction();
+            try
+            {
+                _dbSet.Remove(entity);   
+            }
+            catch (Exception)
+            {
+                _unitOfWork.Rollback();
+                throw;
+            }
+
+            _unitOfWork.Commit();
+
+
         }
 
         public IQueryable<TEntity> Queryable()
@@ -50,12 +78,10 @@ namespace FacturacionApi.Repositories
             _dbContext.SaveChanges();
         }
 
-        /// <summary>
-        /// Pending to fix
-        /// </summary>
-        public void SaveUnitOfWork()
+
+        public IRepository<TEntity> GetRepository()
         {
-            //_unitOfWork.SaveChanges();
+            return _unitOfWork.Repository<TEntity>();
         }
     }
 }
