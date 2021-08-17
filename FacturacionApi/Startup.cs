@@ -31,6 +31,7 @@ namespace FacturacionApi
         {
             services.AddSingleton<DbContext,FacturacionDbContext>();
             services.AddScoped<IRepository<Articulo>,Repository<Articulo>>();
+            services.AddScoped<IRepository<Facturacion>,Repository<Facturacion>>();
             
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -12,5 +12,12 @@ namespace FacturacionApi.Repositories
         void Insert(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
+        IQueryable<TEntity> Queryable();
+        void SaveChanges();
+        /// <summary>
+        /// PEnding to fix
+        /// </summary>
+        void SaveUnitOfWork();
+        
     }
 }

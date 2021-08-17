@@ -79,7 +79,7 @@ namespace FacturacionApi.Controllers
         {
             try
             {
-                var articulo = new Models.Entities.Articulo()
+                var articulo = new Articulo()
                 {
                     Descripcion = viewModel.Descripcion,
                     Estado = viewModel.Estado,
