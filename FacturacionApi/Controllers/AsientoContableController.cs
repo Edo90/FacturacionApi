@@ -77,7 +77,11 @@ namespace FacturacionApi.Controllers
             }
 
         }
-
+        /// <summary>
+        /// El tipo de movimiento 0 sera debito, y el tipo de movimiento 1 sera cosiderado como credito
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult CreateAsiento(CreateAsientoViewModel viewModel)
         {
@@ -104,7 +108,7 @@ namespace FacturacionApi.Controllers
         }
 
         [HttpPut]
-        public ActionResult UpdateAsiento(AsientoContableViewModel viewModel)
+        public ActionResult UpdateAsiento(UpdateAsientoContableViewModel viewModel)
         {
             try
             {
