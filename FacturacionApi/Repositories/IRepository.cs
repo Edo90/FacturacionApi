@@ -12,9 +12,10 @@ namespace FacturacionApi.Repositories
         void Insert(TEntity entity);
         void InsertRange(IEnumerable<TEntity> entities);
         void Update(TEntity entity);
+        void UpdateRange(IEnumerable<TEntity> entities);
         void Delete(TEntity entity);
         IQueryable<TEntity> Queryable();
-        void SaveChanges();
+        
         IRepository<TEntity> GetRepository();
         
     }

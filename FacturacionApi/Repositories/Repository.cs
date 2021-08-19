@@ -73,12 +73,6 @@ namespace FacturacionApi.Repositories
         }
 
 
-        public void SaveChanges()
-        {
-            _dbContext.SaveChanges();
-        }
-
-
         public IRepository<TEntity> GetRepository()
         {
             return _unitOfWork.Repository<TEntity>();
@@ -99,6 +93,24 @@ namespace FacturacionApi.Repositories
             }
             _unitOfWork.SaveChanges();
             _unitOfWork.Commit();
+        }
+
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            _unitOfWork.BeginTransaction();
+            try
+            {
+                _dbSet.UpdateRange(entities);
+
+            }
+            catch
+            {
+                _unitOfWork.Rollback();
+                throw;
+            }
+            _unitOfWork.SaveChanges();
+            _unitOfWork.Commit();
+            
         }
     }
 }

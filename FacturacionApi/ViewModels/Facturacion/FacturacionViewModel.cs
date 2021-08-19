@@ -14,10 +14,17 @@ namespace FacturacionApi.ViewModels.Facturacion
         public string Cliente { get; set; }
         public DateTime Fecha { get; set; }
         public string Comentario { get; set; }
+        public List<FacturacionDetalleViewModel> Detalle { get; set; }
+
+
+    }
+    public class FacturacionViewModelDetalle
+    {
+        public int Id { get; set; }
+        public int FacturacionId { get; set; }
         public int ArticuloId { get; set; }
         public string Articulo { get; set; }
         public int Cantidad { get; set; }
         public decimal PrecioUnitario { get; set; }
-
     }
 }
