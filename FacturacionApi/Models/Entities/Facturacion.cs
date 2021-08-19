@@ -14,9 +14,7 @@ namespace FacturacionApi.Models.Entities
         public Cliente Cliente { get; set; }
         public DateTime Fecha { get; set; }
         public string Comentario { get; set; }
-        public int ArticuloId { get; set; }
-        public Articulo Articulo { get; set; }
-        public int Cantidad { get; set; }
-        public decimal PrecioUnitario { get; set; }
+      
+        public List<FacturacionDetalle> Detalle { get; set; }
     }
 }

@@ -11,6 +11,11 @@ namespace FacturacionApi.ViewModels.Facturacion
         public int ClienteId { get; set; }
         public DateTime Fecha { get; set; }
         public string Comentario { get; set; }
+        public IEnumerable<FacturacionDetalleViewModel> Detalle { get; set; }
+       
+    }
+    public class FacturacionDetalleViewModel
+    {
         public int ArticuloId { get; set; }
         public int Cantidad { get; set; }
         public decimal PrecioUnitario { get; set; }

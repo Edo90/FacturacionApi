@@ -18,66 +18,70 @@ namespace FacturacionApi.Controllers
         ///CRUD
         ///
         private readonly IRepository<Facturacion> _facturacionRepo;
-        public FacturacionController(IRepository<Facturacion> repository)
+        private readonly IRepository<FacturacionDetalle> _facturacionDetalleRepo;
+        public FacturacionController(IRepository<Facturacion> repository, IRepository<FacturacionDetalle> detalleRepo)
         {
             _facturacionRepo = repository;
+            _facturacionDetalleRepo = detalleRepo;
         }
 
         [HttpGet("GetById")]
         public ActionResult<FacturacionViewModel> GetById(int id)
         {
-            try
-            {
-                var Facturacion = _facturacionRepo.Find(id);
-                FacturacionViewModel viewModel = new()
-                {
-                    Articulo = Facturacion.Articulo.Descripcion,
-                    ArticuloId = Facturacion.ArticuloId,
-                    Id = Facturacion.Id,
-                    Cantidad = Facturacion.Cantidad,
-                    Cliente = Facturacion.Cliente.NombreComercial,
-                    ClienteId = Facturacion.ClienteId,
-                    Comentario = Facturacion.Comentario,
-                    Fecha = Facturacion.Fecha,
-                    PrecioUnitario = Facturacion.PrecioUnitario,
-                    Vendedor = Facturacion.Vendedor.Nombre,
-                    VendedorId = Facturacion.VendedorId
-                };
+            return null;
+            //try
+            //{
+            //    var Facturacion = _facturacionRepo.Find(id);
+            //    FacturacionViewModel viewModel = new()
+            //    {
+            //        Articulo = Facturacion.Articulo.Descripcion,
+            //        ArticuloId = Facturacion.ArticuloId,
+            //        Id = Facturacion.Id,
+            //        Cantidad = Facturacion.Cantidad,
+            //        Cliente = Facturacion.Cliente.NombreComercial,
+            //        ClienteId = Facturacion.ClienteId,
+            //        Comentario = Facturacion.Comentario,
+            //        Fecha = Facturacion.Fecha,
+            //        PrecioUnitario = Facturacion.PrecioUnitario,
+            //        Vendedor = Facturacion.Vendedor.Nombre,
+            //        VendedorId = Facturacion.VendedorId
+            //    };
 
-                return Ok(viewModel);
-            }
-            catch (Exception)
-            {
+            //    return Ok(viewModel);
+            //}
+            //catch (Exception)
+            //{
 
-                return BadRequest(($"Ocurrio un error con el {0} de Facturacion", id));
-            }
+            //    return BadRequest(($"Ocurrio un error con el {0} de Facturacion", id));
+            //}
         }
 
         [HttpGet("GetAll")]
         public async Task<ActionResult<List<FacturacionViewModel>>> GetAll()
         {
-            try
-            {
-                var facturas = await _facturacionRepo.Queryable().Select(factura => new {
-                    factura.Articulo.Descripcion,
-                    factura.ArticuloId,
-                    factura.Id,
-                    factura.Cantidad,
-                    factura.Cliente.NombreComercial,
-                    factura.ClienteId,
-                    factura.Comentario,
-                    factura.Fecha,
-                    factura.PrecioUnitario,
-                    factura.Vendedor.Nombre,
-                    factura.VendedorId
-                }).ToListAsync();
+            return null;
+            //try
+            //{
+            //    var facturas = await _facturacionRepo.Queryable().Select(factura => new {
+            //        factura.Articulo.Descripcion,
+            //        factura.ArticuloId,
+            //        factura.Id,
+            //        factura.Cantidad,
+            //        factura.Cliente.NombreComercial,
+            //        factura.ClienteId,
+            //        factura.Comentario,
+            //        factura.Fecha,
+            //        factura.PrecioUnitario,
+            //        factura.Vendedor.Nombre,
+            //        factura.VendedorId
+            //    }).ToListAsync();
                 
-                return Ok(facturas);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            //    return Ok(facturas);
+            //}
+            //catch (Exception)
+            //{
+            //    throw;
+            //}
         }
 
         [HttpPost]
@@ -85,21 +89,37 @@ namespace FacturacionApi.Controllers
         {
             try
             {
-                
-                _facturacionRepo.Insert(new()
+                List<FacturacionDetalle> detalle = new();
+
+                Facturacion cabecera = new()
                 {
-                    ArticuloId = model.ArticuloId,
-                    Cantidad = model.Cantidad,
                     ClienteId = model.ClienteId,
                     Comentario = model.Comentario,
                     Fecha = model.Fecha,
-                    PrecioUnitario = model.PrecioUnitario,
-                    VendedorId = model.VendedorId
-                });
+                    VendedorId = model.VendedorId,
+                };
 
-                _facturacionRepo.SaveChanges();
+                _facturacionRepo.Insert(cabecera);
 
-                return Ok();
+                if (model.Detalle.Any())
+                {
+
+                    foreach (var item in model.Detalle)
+                    {
+                        detalle.Add(new FacturacionDetalle()
+                        {
+                            ArticuloId = item.ArticuloId,
+                            Cantidad = item.Cantidad,
+                            PrecioUnitario = item.PrecioUnitario,
+                            FacturacionId = cabecera.Id
+                        });
+                    }
+                    _facturacionDetalleRepo.InsertRange(detalle);
+
+                }
+
+
+                return Ok("Factura creada con exito");
             }
             catch (Exception)
             {
@@ -111,25 +131,26 @@ namespace FacturacionApi.Controllers
         [HttpPut]
         public ActionResult UpdateFacturacion(FacturacionViewModel viewModel)
         {
-            var factura = _facturacionRepo.Find(viewModel.Id);
-            factura.PrecioUnitario = viewModel.PrecioUnitario;
-            factura.VendedorId = viewModel.VendedorId;
-            factura.ArticuloId = viewModel.ArticuloId;
-            factura.Cantidad = viewModel.Cantidad;
-            factura.ClienteId = viewModel.ClienteId;
-            factura.Fecha = viewModel.Fecha;
-            factura.Comentario = viewModel.Comentario;
+            //var factura = _facturacionRepo.Find(viewModel.Id);
+            //factura.PrecioUnitario = viewModel.PrecioUnitario;
+            //factura.VendedorId = viewModel.VendedorId;
+            //factura.ArticuloId = viewModel.ArticuloId;
+            //factura.Cantidad = viewModel.Cantidad;
+            //factura.ClienteId = viewModel.ClienteId;
+            //factura.Fecha = viewModel.Fecha;
+            //factura.Comentario = viewModel.Comentario;
 
-            try
-            {
-                _facturacionRepo.Update(factura);
-                _facturacionRepo.SaveChanges();
-                return Ok();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            //try
+            //{
+            //    _facturacionRepo.Update(factura);
+            //    _facturacionRepo.SaveChanges();
+            //    return Ok();
+            //}
+            //catch (Exception)
+            //{
+            //    throw;
+            //}
+            return null; 
 
         }
 

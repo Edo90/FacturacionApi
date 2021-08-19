@@ -83,5 +83,22 @@ namespace FacturacionApi.Repositories
         {
             return _unitOfWork.Repository<TEntity>();
         }
+
+        public void InsertRange(IEnumerable<TEntity> entities)
+        {
+            _unitOfWork.BeginTransaction();
+            try
+            {
+                _dbSet.AddRange(entities);
+
+            }
+            catch
+            {
+                _unitOfWork.Rollback();
+                throw;
+            }
+            _unitOfWork.SaveChanges();
+            _unitOfWork.Commit();
+        }
     }
 }

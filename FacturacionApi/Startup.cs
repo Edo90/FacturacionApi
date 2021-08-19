@@ -34,6 +34,7 @@ namespace FacturacionApi
             services.AddScoped<IRepository<Articulo>,Repository<Articulo>>();
             services.AddScoped<IRepository<Facturacion>,Repository<Facturacion>>();
             services.AddScoped<IRepository<AsientoContable>, Repository<AsientoContable>>();
+            services.AddScoped<IRepository<FacturacionDetalle>, Repository<FacturacionDetalle>>();
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
