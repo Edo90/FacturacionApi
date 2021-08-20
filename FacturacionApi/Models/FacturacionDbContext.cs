@@ -10,7 +10,7 @@ namespace FacturacionApi.Models
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Facturacion> Facturaciones { get; set; }
         public DbSet<AsientoContable> AsientosContables { get; set; }
-
+        public DbSet<FacturacionDetalle> FacturacionDetalle { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         
