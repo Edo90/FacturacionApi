@@ -18,13 +18,5 @@ namespace FacturacionApi.ViewModels.Facturacion
 
 
     }
-    public class FacturacionViewModelDetalle
-    {
-        public int Id { get; set; }
-        public int FacturacionId { get; set; }
-        public int ArticuloId { get; set; }
-        public string Articulo { get; set; }
-        public int Cantidad { get; set; }
-        public decimal PrecioUnitario { get; set; }
-    }
+   
 }

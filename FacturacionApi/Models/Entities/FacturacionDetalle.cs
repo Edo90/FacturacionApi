@@ -14,5 +14,6 @@ namespace FacturacionApi.Models.Entities
         public decimal PrecioUnitario { get; set; }
         public int FacturacionId { get; set; }
         public Facturacion Facturacion { get; set; }
+        public int? AsientoId { get; set; }
     }
 }

@@ -132,5 +132,15 @@ namespace FacturacionApi.Controllers
         }
 
 
+        [HttpGet("TestRequest")]
+        public ActionResult GetRequest()
+        {
+            Services.ContabilidadService service = new();
+
+            service.GetAsientoContable(326);
+
+            return Ok();
+        }
+
     }
 }

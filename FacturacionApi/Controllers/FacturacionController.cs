@@ -1,5 +1,6 @@
 ﻿using FacturacionApi.Models.Entities;
 using FacturacionApi.Repositories;
+using FacturacionApi.Services;
 using FacturacionApi.ViewModels.Facturacion;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,7 @@ namespace FacturacionApi.Controllers
                         Cantidad = detalle.Cantidad,
                         PrecioUnitario = detalle.PrecioUnitario,
                         Articulo = detalle.Articulo.Descripcion,
+                        IdAsiento = detalle.AsientoId,
                         Id = detalle.Id
                     }).ToList()
                 }).FirstOrDefaultAsync(x => x.Id == id);
@@ -79,6 +81,7 @@ namespace FacturacionApi.Controllers
                         Cantidad = x.Cantidad,
                         PrecioUnitario = x.PrecioUnitario,
                         Articulo = x.Articulo.Descripcion,
+                        IdAsiento = x.AsientoId,
                         Id = x.Id
 
                     }).ToList()
@@ -145,7 +148,23 @@ namespace FacturacionApi.Controllers
             factura.ClienteId = viewModel.ClienteId;
             factura.Fecha = viewModel.Fecha;
             factura.Comentario = viewModel.Comentario;
+            List<FacturacionDetalle> detalles = GetDetallesToUpdate(viewModel);
 
+            try
+            {
+                _facturacionRepo.Update(factura);
+                _facturacionDetalleRepo.UpdateRange(detalles);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        private List<FacturacionDetalle> GetDetallesToUpdate(FacturacionViewModel viewModel)
+        {
             List<FacturacionDetalle> detalles = _facturacionDetalleRepo.Queryable().Where(x => x.FacturacionId == viewModel.Id).ToList();
 
             if (viewModel.Detalle.Any())
@@ -160,30 +179,21 @@ namespace FacturacionApi.Controllers
                             ArticuloId = item.ArticuloId,
                             Cantidad = item.Cantidad,
                             PrecioUnitario = item.PrecioUnitario,
-                            FacturacionId = viewModel.Id
+                            FacturacionId = viewModel.Id,
+                            AsientoId = item.IdAsiento
                         });
                     }
                     else
                     {
                         detalles.Where(x => x.Id == item.Id)
                             .ToList()
-                            .ForEach(t => { t.PrecioUnitario = item.PrecioUnitario; t.ArticuloId = item.ArticuloId; t.Cantidad = item.Cantidad; });
+                            .ForEach(t => { t.PrecioUnitario = item.PrecioUnitario; t.ArticuloId = item.ArticuloId; t.Cantidad = item.Cantidad; t.AsientoId = item.IdAsiento; });
                     }
                 }
 
             }
 
-            try
-            {
-                _facturacionRepo.Update(factura);
-                _facturacionDetalleRepo.UpdateRange(detalles);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
+            return detalles;
         }
 
         [HttpDelete]
@@ -201,6 +211,31 @@ namespace FacturacionApi.Controllers
                 return BadRequest(($"El id {0} no ha sido encontrado", id));
             }
 
+        }
+
+        [HttpPost("Contabilizar")]
+        public ActionResult Contabilizar(FacturacionViewModel viewModel)
+        {
+            try
+            {
+                using ContabilidadService service = new();
+                service.PostAsientoContable(viewModel);
+            }
+            catch
+            {
+                return BadRequest("No se pudo completar la solicitud");
+            }
+            try
+            {
+                var detalles = GetDetallesToUpdate(viewModel);
+                _facturacionDetalleRepo.UpdateRange(detalles);
+            }
+            catch
+            {
+                return BadRequest("No se pudo Actualizar asiento contables de manera local");
+            }
+
+            return Ok("Asiento Contable ha sido obtenido y actualizado");
         }
     }
 }
