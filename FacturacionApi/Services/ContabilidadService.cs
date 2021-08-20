@@ -71,10 +71,10 @@ namespace FacturacionApi.Services
                 {
                     item.IdAsiento = asientoContableResponse.Transacciones.Where(x => x.CuentasContablesId == item.Id).Select(x => x.AsientoId).FirstOrDefault();
                 }
-                
+
             }
             else
-                Console.Write("Error");
+                throw new Exception("No se pudo realizar el Asiento");
 
             return factura;
 

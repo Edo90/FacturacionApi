@@ -185,9 +185,15 @@ namespace FacturacionApi.Controllers
                     }
                     else
                     {
-                        detalles.Where(x => x.Id == item.Id)
-                            .ToList()
-                            .ForEach(t => { t.PrecioUnitario = item.PrecioUnitario; t.ArticuloId = item.ArticuloId; t.Cantidad = item.Cantidad; t.AsientoId = item.IdAsiento; });
+                        foreach (var detalle in detalles.Where(x => x.Id == item.Id))
+                        {
+
+                            detalle.PrecioUnitario = item.PrecioUnitario;
+                            detalle.ArticuloId = item.ArticuloId;
+                            detalle.Cantidad = item.Cantidad;
+                            detalle.AsientoId = item.IdAsiento;
+                        }
+
                     }
                 }
 
