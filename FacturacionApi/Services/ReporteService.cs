@@ -13,27 +13,32 @@ namespace FacturacionApi.Services
     {
         private bool disposedValue;
 
-        public async Task<List<VendedorVentasPorMesViewModel>> GetVendedorVentas()
+        public async Task<PaginatedList<VendedorVentasPorMesViewModel>> GetVendedorVentas(int pageNumber)
         {
             using var _dbContext = new FacturacionDbContext();
 
             var vendedorVentasPorMes = _dbContext.FacturacionDetalle.Include(x => x.Facturacion)
                                                     .ThenInclude(x => x.Vendedor)
-                                                    .GroupBy(x => 
-                                                    new { 
-                                                        x.Facturacion.VendedorId, 
+                                                    .GroupBy(x =>
+                                                    new
+                                                    {
+                                                        x.Facturacion.VendedorId,
                                                         x.Facturacion.Vendedor.Nombre
                                                     })
-                                                    .Select(x => 
-                                                    new VendedorVentasPorMesViewModel{
-                                                            VendedorId = x.Key.VendedorId,
-                                                            NombreVendedor = x.Key.Nombre,
-                                                            FacturasEmitidas =0, /*x.Count(t => t.Facturacion.Id > 0), 
-*/                                                            Ventas = x.Sum(x => x.Cantidad * x.PrecioUnitario) })
-                                                     .ToList();
+                                                    .Select(x =>
+                                                    new VendedorVentasPorMesViewModel
+                                                    {
+                                                        VendedorId = x.Key.VendedorId,
+                                                        NombreVendedor = x.Key.Nombre,
+                                                        FacturasEmitidas = x.Count(t => t.FacturacionId > 0),
+                                                        Ventas = x.Sum(x => x.Cantidad * x.PrecioUnitario)
+                                                    })
+                                                     .AsQueryable();
 
 
-            return vendedorVentasPorMes;
+            var result = await PaginatedList<VendedorVentasPorMesViewModel>.CreateAsync(vendedorVentasPorMes, pageNumber,10);
+
+            return result;
         }
 
         protected virtual void Dispose(bool disposing)
